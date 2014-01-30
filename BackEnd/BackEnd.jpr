@@ -59,6 +59,7 @@
       <list n="technologyScope">
          <string v="JSP"/>
          <string v="Java"/>
+         <string v="HTML"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">

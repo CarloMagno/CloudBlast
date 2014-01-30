@@ -15,7 +15,7 @@ import java.net.URI;
 
 import javax.servlet.ServletContext;
 
-import javax.sound.midi.Sequence;
+import pfc.blast.backend.algorithm.Sequence;
 
 import org.json.JSONArray;
 import org.json.JSONException;
