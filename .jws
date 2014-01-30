@@ -14,6 +14,5 @@
    <list n="listOfChildren">
       <hash><url n="URL" path="BackEnd/BackEnd.jpr"/></hash>
       <hash><url n="URL" path="FrontEnd/FrontEnd.jpr"/></hash>
-      <hash><url n="URL" path="git.jpr"/></hash>
    </list>
 </jws:workspace>
