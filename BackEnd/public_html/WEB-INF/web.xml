@@ -1,0 +1,29 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+  <servlet>
+    <servlet-name>BlastWS</servlet-name>
+    <servlet-class>pfc.blast.backend.BlastWS</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>WSTest</servlet-name>
+    <servlet-class>pfc.test.WSTest</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ThreadTest</servlet-name>
+    <servlet-class>pfc.test.ThreadTest</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BlastWS</servlet-name>
+    <url-pattern>/BlastWS/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WSTest</servlet-name>
+    <url-pattern>/WSTest/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ThreadTest</servlet-name>
+    <url-pattern>/ThreadTest/</url-pattern>
+  </servlet-mapping>
+</web-app>
