@@ -8,7 +8,7 @@
   </head>
   <body>
   <%
-    out.print(this.getServletContext().getServerInfo());
+    //out.print(this.getServletContext().getServerInfo());
   %>
   </body>
 </html>

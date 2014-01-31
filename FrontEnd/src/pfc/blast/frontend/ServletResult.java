@@ -46,8 +46,9 @@ public class ServletResult extends HttpServlet {
     
     private List<String> workers = null;
     private long numProteins = 0;
-    private static final String WS_URL = "/WSTest/GGYEYAYGEYGE";
-    
+    //private static final String WS_URL = "/WSTest/GGYEYAYGEYGE";
+    private static final String WS_URL = "/BlastWS/GGYEYAYGEYGE";
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         
