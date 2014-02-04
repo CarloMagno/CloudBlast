@@ -21,6 +21,7 @@
         <div id="menu">
             <ul>
             	<li class="menuitem"><a href="index.jsp">Home</a></li>
+                <li class="menuitem"><a href="workers.jsp">Workers</a></li>
                 <li class="menuitem"><a href="about.jsp">About</a></li>
                 <li class="menuitem"><a href="contact.jsp">Contact</a></li>
             </ul>

@@ -6,8 +6,16 @@
     <servlet-name>ServletResult</servlet-name>
     <servlet-class>pfc.blast.frontend.ServletResult</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>SetWorkers</servlet-name>
+    <servlet-class>pfc.blast.frontend.SetWorkers</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>ServletResult</servlet-name>
     <url-pattern>/ServletResult</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetWorkers</servlet-name>
+    <url-pattern>/SetWorkers</url-pattern>
   </servlet-mapping>
 </web-app>

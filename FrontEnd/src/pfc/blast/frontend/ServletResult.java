@@ -30,8 +30,9 @@ public class ServletResult extends HttpServlet {
     "        <div id=\"menu\">\n" + 
     "            <ul>\n" + 
     "                   <li class=\"menuitem\"><a href=\"index.jsp\">Home</a></li>\n" + 
-    "                <li class=\"menuitem\"><a href=\"about.jsp\">About</a></li>\n" + 
-    "                <li class=\"menuitem\"><a href=\"contact.jsp\">Contact</a></li>\n" + 
+    "                   <li class=\"menuitem\"><a href=\"workers.jsp\">Workers</a></li>\n" +
+    "                   <li class=\"menuitem\"><a href=\"about.jsp\">About</a></li>\n" + 
+    "                   <li class=\"menuitem\"><a href=\"contact.jsp\">Contact</a></li>\n" + 
     "            </ul>\n" + 
     "        </div>\n" + 
     "        ";
@@ -39,25 +40,20 @@ public class ServletResult extends HttpServlet {
     "        <div id=\"content_top\"></div>\n" + 
     "        <div id=\"content_main\">";
     
-    private static final String END_CONTENT = "<div id=\"content_bottom\"></div>        \n" +
+    private static final String END_CONTENT = "</div><div id=\"content_bottom\"></div>        \n" +
     "        <div id=\"footer\"></div>\n" + 
     "    </div>";
     
     
-    private List<String> workers = null;
+    //private List<String> workers;
+    private WorkersList workers;
     private long numProteins = 0;
     //private static final String WS_URL = "/WSTest/GGYEYAYGEYGE";
-    private static final String WS_URL = "/BlastWS/GGYEYAYGEYGE";
+    private static final String WS_URL = "/BlastWS";
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        
-        // Load data
-        workers = new LinkedList<String>();
-        //workers.add("http://192.168.1.130:8080/webapp1" + WS_URL + "/1/3100");
-        workers.add("http://pfcblast-pfcblast.rhcloud.com/webapp1" + WS_URL + "/1/3100");
-        workers.add("http://pfc-blast.herokuapp.com" + WS_URL + "/3101/6200");
-            
+        workers = WorkersList.getInstance();        
         InputStream propertiesStream = getServletContext().getResourceAsStream("/db/data.properties");
         BufferedReader br = new BufferedReader(new InputStreamReader(propertiesStream));
         try {
@@ -89,7 +85,9 @@ public class ServletResult extends HttpServlet {
         out.println(HEADER_TO_BODY);
         out.println(PAGE_TOP);
         out.println(BEGIN_CONTENT);
-        out.println("<h1>Results for "+request.getParameter("sequence")+"</h1>");
+        String query = request.getParameter("sequence");
+        out.println("<h1>Results for "+ query +"</h1>");
+        out.println("<br></br>");
         
         long t1 = 0;
         try {
@@ -104,12 +102,18 @@ public class ServletResult extends HttpServlet {
             List<String> responses = Collections.synchronizedList(new ArrayList<String>());
             List<WSThread> hilos = new LinkedList<WSThread>();
             
-            t1 = System.currentTimeMillis();
-
             // Create all threads.
+            for(int i=0; i<workers.size(); i++){
+                String url = formURL(i,query);
+                hilos.add(new WSThread(url, responses));
+            }
+            /*
             for(String url: workers){
                 hilos.add(new WSThread(url, responses));
             }
+            */
+            
+            t1 = System.currentTimeMillis();
             
             // Creates all threads.
             for(WSThread hilo: hilos){
@@ -121,6 +125,9 @@ public class ServletResult extends HttpServlet {
                 hilo.join();
             }
             
+            long t2 = System.currentTimeMillis();
+            out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes.</b>%n</h2>", t2-t1, workers.size());
+            out.println("<br></br>");
             // Collecting data and print them.
             for(String resp: responses){
                 JSONObject jsonResp = new JSONObject(resp);
@@ -133,9 +140,6 @@ public class ServletResult extends HttpServlet {
         } catch( Exception e ){
             e.printStackTrace(out);
         }
-        
-        long t2 = System.currentTimeMillis();
-        out.printf("Running Time: %d msec%n", t2-t1);
         
         out.println(END_CONTENT);
         out.println("</div>");
@@ -158,5 +162,34 @@ public class ServletResult extends HttpServlet {
         } catch( Exception e ){
             out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Aux method to help to form the URL of the worker. Set the range of 
+     * proteins to compute for the worker 'index'.
+     * 
+     * @param index
+     * @param size
+     * @return
+     */
+    private String getRange(int index, int numWorkers) {
+        String res = "";
+        
+        double total = numProteins;
+        double lengthRange = total/numWorkers;
+        long min = (long)Math.floor(lengthRange*index);
+        long max = (long)Math.floor(lengthRange*index + lengthRange)-1;
+        res = res.concat("/"+ min +"/"+ max);
+        
+        return res;
+    }
+
+    /**
+     *
+     * @param index
+     * @return
+     */
+    private String formURL(int index, String query) {
+        return workers.get(index) + WS_URL + "/" + query + getRange(index, workers.size());
     }
 }
