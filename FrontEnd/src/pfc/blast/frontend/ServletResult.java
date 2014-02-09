@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ServletResult extends HttpServlet {
+    
     private static final String CONTENT_TYPE_HTML = "text/html";
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String HEADER_TO_BODY = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" /><title>BLAST Results</title></head><body>";
@@ -45,10 +46,9 @@ public class ServletResult extends HttpServlet {
     "    </div>";
     
     
-    //private List<String> workers;
     private WorkersList workers;
     private long numProteins = 0;
-    //private static final String WS_URL = "/WSTest/GGYEYAYGEYGE";
+    private static int BLOCK_SIZE = 100;
     private static final String WS_URL = "/BlastWS";
 
     public void init(ServletConfig config) throws ServletException {
@@ -100,34 +100,33 @@ public class ServletResult extends HttpServlet {
                         
             // Create data structures.
             List<String> responses = Collections.synchronizedList(new ArrayList<String>());
-            List<WSThread> hilos = new LinkedList<WSThread>();
-            
+            //List<WSThread> hilos = new LinkedList<WSThread>();
+            List<WSRequest> hilos = new LinkedList<WSRequest>();
+
+            RangeCreator rangeCreator = new RangeCreator(this.numProteins, BLOCK_SIZE);
             // Create all threads.
             for(int i=0; i<workers.size(); i++){
-                String url = formURL(i,query);
-                hilos.add(new WSThread(url, responses));
+                String url = formURL(workers.get(i),query);
+                //hilos.add(new WSThread(url, responses));
+                hilos.add(new WSRequest(url, rangeCreator, responses));
             }
-            /*
-            for(String url: workers){
-                hilos.add(new WSThread(url, responses));
-            }
-            */
             
             t1 = System.currentTimeMillis();
             
             // Creates all threads.
-            for(WSThread hilo: hilos){
+            for(WSRequest hilo: hilos){
                 hilo.start();
             }
         
             // Waiting all threads to finish.
-            for(WSThread hilo: hilos){
+            for(WSRequest hilo: hilos){
                 hilo.join();
             }
             
             long t2 = System.currentTimeMillis();
             out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes.</b>%n</h2>", t2-t1, workers.size());
             out.println("<br></br>");
+            
             // Collecting data and print them.
             for(String resp: responses){
                 JSONObject jsonResp = new JSONObject(resp);
@@ -189,7 +188,7 @@ public class ServletResult extends HttpServlet {
      * @param index
      * @return
      */
-    private String formURL(int index, String query) {
-        return workers.get(index) + WS_URL + "/" + query + getRange(index, workers.size());
+    private String formURL(String url, String query) {
+        return url + WS_URL + "/" + query /*+ getRange(index, workers.size())*/;
     }
 }
