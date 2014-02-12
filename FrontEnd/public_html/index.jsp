@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page contentType="text/html;charset=windows-1252"%>
+<%@ page import="pfc.blast.frontend.WorkersList"%>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
@@ -35,18 +36,50 @@
             <form name="inputSequence" method="post" action="ServletResult">
             <div style="width:200px;float:left;display:inline-block;">
               <p>
-                Input Sequence <input type="text" name="sequence"/>
+                <table>
+                    <tr>
+                        <td>
+                            Input Sequence <input type="text" name="sequence"/> 
+                        </td>
+                        <td>
+                            Workers
+                            <% 
+                                WorkersList wl = WorkersList.getInstance();
+                                out.print("("+wl.size()+" max)");
+                            %> 
+                            <input type="text" name="numWorkers" size="5"/>
+                            
+                        </td>
+                    </tr>
+                </table>
               </p>
               <br></br>
               <p>
                 <input type="submit" name="Send" value="Submit" onclick="showLoading()"/>
               </p>
             </div>
-            <div style="margin-left:350px;">
+            <div style="margin-left:425px;">
               <p>
                 <img id="loadingImage" src="images/ajax-loader.gif" style="visibility:hidden"
                      height="100" width="100" />
               </p>
+              <br></br>
+              <% 
+                String error = request.getParameter("error");
+                if ( error != null ) {
+                    int errorCode = Integer.valueOf(error);
+                    String errorMsg = "";
+                    
+                    switch(errorCode){
+                        case 1:  errorMsg = "Wrong number of workers.";
+                                 break;
+                        case 2:  errorMsg = "Input sequence not valid.";
+                                 break;
+                        default: break;
+                    }
+                    out.print("<h2><font color=\"red\">"+errorMsg+"</font></h3>");
+                }
+              %>
             </div>
             </form>
         </div>

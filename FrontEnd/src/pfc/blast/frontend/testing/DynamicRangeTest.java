@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pfc.blast.frontend.RangeCreator;
+import pfc.blast.frontend.RangeCreatorStaticLoad;
 import pfc.blast.frontend.WSRequest;
 import pfc.blast.frontend.WSThread;
 
@@ -22,7 +23,7 @@ public class DynamicRangeTest {
         workers.add("http://pfcblast-pfcblast.rhcloud.com/backend");
         workers.add("http://pfc-blast.herokuapp.com");
         
-        RangeCreator rangeCreator = new RangeCreator(6298, 50);
+        RangeCreator rangeCreator = new RangeCreatorStaticLoad(6298, 50);
         
         for(String urlWorker: workers){
             thWorkers.add(new WSRequest(formURL(urlWorker,"QUERY"), rangeCreator, new LinkedList<String>()));

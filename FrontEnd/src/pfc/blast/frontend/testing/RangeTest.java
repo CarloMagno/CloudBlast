@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pfc.blast.frontend.RangeCreator;
+import pfc.blast.frontend.RangeCreatorStaticLoad;
 
 public class RangeTest {
 
@@ -48,7 +49,7 @@ public class RangeTest {
         System.out.println("******* TEST 2 *******");
         System.out.println("**********************");
         
-        RangeCreator rangeTest = new RangeCreator(6298,100);
+        RangeCreator rangeTest = new RangeCreatorStaticLoad(6298,100);
         while(!rangeTest.isCompleted()){
             System.out.println(rangeTest.getNextRange());    
         }

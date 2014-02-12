@@ -59,6 +59,7 @@ public class ServletResult extends HttpServlet {
         try {
             this.numProteins = Long.parseLong(br.readLine());
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -81,12 +82,35 @@ public class ServletResult extends HttpServlet {
         response.setContentType(CONTENT_TYPE_HTML);
         OutputStream outStr = response.getOutputStream();
         PrintStream out = new PrintStream(outStr);
+
+        String query = request.getParameter("sequence");
+        if (query == null) {
+            response.sendRedirect("index.jsp?error=2");    
+        }
+        // Number of workers input.
+        int numWorkers = 0;
+        
+        try{
+            if(request.getParameter("numWorkers") == null){
+                numWorkers = workers.size();
+            }else{
+                numWorkers = Integer.valueOf(request.getParameter("numWorkers"));
+            }
+            
+            if (numWorkers <= 0) {
+                response.sendRedirect("index.jsp?error=1");
+            } else if (numWorkers > workers.size()) {
+                numWorkers = workers.size();
+            }
+        }catch (Exception e){
+            response.sendRedirect("index.jsp?error=1");    
+        }        
         
         out.println(HEADER_TO_BODY);
         out.println(PAGE_TOP);
         out.println(BEGIN_CONTENT);
-        String query = request.getParameter("sequence");
-        out.println("<h1>Results for "+ query +"</h1>");
+
+        out.println("<h1>Results for " + query + "</h1>");
         out.println("<br></br>");
         
         long t1 = 0;
@@ -100,15 +124,20 @@ public class ServletResult extends HttpServlet {
                         
             // Create data structures.
             List<String> responses = Collections.synchronizedList(new ArrayList<String>());
-            //List<WSThread> hilos = new LinkedList<WSThread>();
             List<WSRequest> hilos = new LinkedList<WSRequest>();
-
-            RangeCreator rangeCreator = new RangeCreator(this.numProteins, BLOCK_SIZE);
+            RangeCreator rangeCreator = new RangeCreatorStaticLoad(this.numProteins, BLOCK_SIZE);
+            
+            /*
             // Create all threads.
             for(int i=0; i<workers.size(); i++){
-                String url = formURL(workers.get(i),query);
-                //hilos.add(new WSThread(url, responses));
-                hilos.add(new WSRequest(url, rangeCreator, responses));
+                String url = formWebServiceURL(workers.get(i),query);
+                hilos.add( new WSRequest(url,rangeCreator,responses) );
+            }
+            */
+            
+            for(int i=0; i<numWorkers; i++){
+                String url = formWebServiceURL(workers.get(i),query);
+                hilos.add( new WSRequest(url,rangeCreator,responses) );
             }
             
             t1 = System.currentTimeMillis();
@@ -124,7 +153,9 @@ public class ServletResult extends HttpServlet {
             }
             
             long t2 = System.currentTimeMillis();
-            out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes.</b>%n</h2>", t2-t1, workers.size());
+            //out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes.</b>%n</h2>", t2-t1, workers.size());
+            out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes </b>%n (%d max)</h2>", t2-t1, numWorkers, workers.size());
+
             out.println("<br></br>");
             
             // Collecting data and print them.
@@ -162,33 +193,14 @@ public class ServletResult extends HttpServlet {
             out.println(e.getMessage());
         }
     }
-
-    /**
-     * Aux method to help to form the URL of the worker. Set the range of 
-     * proteins to compute for the worker 'index'.
-     * 
-     * @param index
-     * @param size
-     * @return
-     */
-    private String getRange(int index, int numWorkers) {
-        String res = "";
-        
-        double total = numProteins;
-        double lengthRange = total/numWorkers;
-        long min = (long)Math.floor(lengthRange*index);
-        long max = (long)Math.floor(lengthRange*index + lengthRange)-1;
-        res = res.concat("/"+ min +"/"+ max);
-        
-        return res;
-    }
-
+    
     /**
      *
-     * @param index
+     * @param url
+     * @param query
      * @return
      */
-    private String formURL(String url, String query) {
-        return url + WS_URL + "/" + query /*+ getRange(index, workers.size())*/;
+    private String formWebServiceURL(String url, String query) {
+        return url + WS_URL + "/" + query;
     }
 }
