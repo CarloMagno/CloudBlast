@@ -23,12 +23,7 @@ public class WSRequest extends Thread {
 
     public void run() {
         while(!rangeCreator.isCompleted()){
-            try {
-                /*
-                Thread.sleep((long)Math.random() * 1000);
-                System.out.println(this.url+rangeCreator.getNextRange());
-                */
-                
+            try {                
                 URL wsUrl = new URL(this.url+rangeCreator.getNextRange());
                 URLConnection conn = wsUrl.openConnection();
                 BufferedReader in =

@@ -22,6 +22,8 @@ public class ProteinDatabase {
     private long numProteins;
     private final static String PATH = "/db/";
     
+    private String path2; // borrar
+    
     // Exported constructors.
     public ProteinDatabase(File database, File index) {
 
@@ -44,6 +46,12 @@ public class ProteinDatabase {
 
     }
     
+    // borrar
+    public ProteinDatabase(String path){
+        context = null;
+        this.path2 = path;
+        this.numProteins = 6298;
+    }
     /**
      * Construct a new protein sequence database.
      *
@@ -95,7 +103,13 @@ public class ProteinDatabase {
             throw new IndexOutOfBoundsException("ProteinDatabase.getProteinSequence(): i (= " + i + ") out of bounds");
         }
         String name = Long.toString(i).concat(".fasta");
-        InputStream ins = context.getResourceAsStream(PATH + name);
+        InputStream ins ;
+        // borrar
+        if(context == null){
+            ins = new FileInputStream(path2 + name);
+        }else{
+            ins = context.getResourceAsStream(PATH + name);
+        }
         return new ProteinSequence(ins);
     }
 

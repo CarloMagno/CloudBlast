@@ -76,5 +76,6 @@ public class AlignmentPrinter {
             outStr.print("</table>");
             outStr.print("<br>");
             outStr.print("<br>");
+            outStr.print("<hr>");
     }
 }

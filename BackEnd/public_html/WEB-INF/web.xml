@@ -26,4 +26,7 @@
     <servlet-name>ThreadTest</servlet-name>
     <url-pattern>/ThreadTest/</url-pattern>
   </servlet-mapping>
+  
+  <login-config></login-config>
+  
 </web-app>

@@ -19,7 +19,7 @@ public class RangeCreatorSequential implements RangeCreator {
     }
 
     public synchronized String getNextRange() {
-        String res = "/1" + "/" + maxRange;
+        String res = "/0" + "/" + maxRange;
         this.completed = true;
         return res;
     }

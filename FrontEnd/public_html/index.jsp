@@ -34,36 +34,45 @@
             <h2>Please, enter your sequence to compare with our database.</h2>
             <br></br>
             <form name="inputSequence" method="post" action="ServletResult">
-            <div style="width:200px;float:left;display:inline-block;">
-              <p>
+             <div style="float:left;display:inline-block;">
                 <table>
                     <tr>
                         <td>
                             Input Sequence <input type="text" name="sequence"/> 
-                        </td>
-                        <td>
+                            &nbsp;
                             Workers
                             <% 
                                 WorkersList wl = WorkersList.getInstance();
                                 out.print("("+wl.size()+" max)");
                             %> 
-                            <input type="text" name="numWorkers" size="5"/>
-                            
+                            <input type="text" name="numWorkers" size="5" value=<%=wl.size()%> />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br>Parallelization:<br>
+                            <input type="radio" name="parallel" value="seq"/>Sequential<br>
+                            <input type="radio" name="parallel" value="staticPar"/>Static parallel<br>
+                            <input type="radio" name="parallel" value="dynamParFix" checked/>Dynamic parallel (fixed size) &nbsp; Block size <input type="text" name="blockSize" size=3 value="50"/><br>
+                            <input type="radio" name="parallel" value="dynamParDyn" />Dynamic parallel (dynamic size)<br>
                         </td>
                     </tr>
                 </table>
-              </p>
-              <br></br>
               <p>
                 <input type="submit" name="Send" value="Submit" onclick="showLoading()"/>
               </p>
             </div>
-            <div style="margin-left:425px;">
+            <div style="margin-left:300px;">
               <p>
-                <img id="loadingImage" src="images/ajax-loader.gif" style="visibility:hidden"
+                <img id="loadingImage" src="images/ajax-loader.gif" style="visibility:hidden;padding-top:25%"
                      height="100" width="100" />
               </p>
               <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+
               <% 
                 String error = request.getParameter("error");
                 if ( error != null ) {
@@ -77,7 +86,7 @@
                                  break;
                         default: break;
                     }
-                    out.print("<h2><font color=\"red\">"+errorMsg+"</font></h3>");
+                    out.print("<h3><font color=\"red\">"+errorMsg+"</font></h3>");
                 }
               %>
             </div>

@@ -8,7 +8,11 @@
   </head>
   <body>
   <%
-    //out.print(this.getServletContext().getServerInfo());
+    out.print("<h2>Cloud BLAST Worker</h2>");
+    out.print("<br></br>");
+    out.print("Application Server: " + application.getServerInfo());
+    out.print("<br></br>");
+    out.print("Cores available: " + Runtime.getRuntime().availableProcessors());
   %>
   </body>
 </html>

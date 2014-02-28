@@ -125,16 +125,22 @@ public class ServletResult extends HttpServlet {
             // Create data structures.
             List<String> responses = Collections.synchronizedList(new ArrayList<String>());
             List<WSRequest> hilos = new LinkedList<WSRequest>();
-            RangeCreator rangeCreator = new RangeCreatorStaticLoad(this.numProteins, BLOCK_SIZE);
             
-            /*
-            // Create all threads.
-            for(int i=0; i<workers.size(); i++){
-                String url = formWebServiceURL(workers.get(i),query);
-                hilos.add( new WSRequest(url,rangeCreator,responses) );
+            // Tipo de paralelismo.
+            RangeCreator rangeCreator = null;
+            String parallelChoice = request.getParameter("parallel");
+            
+            if (parallelChoice.equals("seq")) {
+                rangeCreator = new RangeCreatorSequential(this.numProteins);
+            } else if (parallelChoice.equals("staticPar")) {
+                int blockSize = Integer.valueOf(request.getParameter("blockSize"));
+                rangeCreator = new RangeCreatorStaticLoad(this.numProteins, blockSize);    
+            } else if (parallelChoice.equals("dynamParFix")) {
+                rangeCreator = new RangeCreatorFixedLoad(this.numProteins, numWorkers);
+            } else if (parallelChoice.equals("dynamParDyn")) {
+                rangeCreator = new RangeCreatorDynamicLoad(this.numProteins, numWorkers);
             }
-            */
-            
+                        
             for(int i=0; i<numWorkers; i++){
                 String url = formWebServiceURL(workers.get(i),query);
                 hilos.add( new WSRequest(url,rangeCreator,responses) );
@@ -153,9 +159,7 @@ public class ServletResult extends HttpServlet {
             }
             
             long t2 = System.currentTimeMillis();
-            //out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes.</b>%n</h2>", t2-t1, workers.size());
             out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes </b>%n (%d max)</h2>", t2-t1, numWorkers, workers.size());
-
             out.println("<br></br>");
             
             // Collecting data and print them.

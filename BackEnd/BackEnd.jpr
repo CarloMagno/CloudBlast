@@ -158,8 +158,18 @@
    <hash n="oracle.jdeveloper.runner.RunConfigurations">
       <hash n="runConfigurationDefinitions">
          <hash n="Default">
+            <value n="allowInput" v="true"/>
             <value n="custom" v="false"/>
             <value n="name" v="Default"/>
+            <hash n="oracle.jdeveloper.oracle.jdevimpl.profiler.settings.ProfilerConfiguration">
+               <value n="timeCollectBlockedWait" v="true"/>
+               <value n="timeCollectElapsed" v="true"/>
+               <value n="timeCollectIO" v="true"/>
+            </hash>
+            <hash n="oracle.jdevimpl.runner.debug.DebugConfiguration">
+               <value n="remoteParameter:jpda:jdi_attach_method:" v=""/>
+               <value n="remoteParameter:jpdaListen:localAddress" v=""/>
+            </hash>
          </hash>
       </hash>
       <list n="runConfigurationList">

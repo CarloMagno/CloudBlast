@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pfc.blast.frontend.RangeCreator;
+import pfc.blast.frontend.RangeCreatorDynamicLoad;
 import pfc.blast.frontend.RangeCreatorStaticLoad;
 
 public class RangeTest {
@@ -14,10 +15,12 @@ public class RangeTest {
     public static String getRange(int index, int numWorkers) {
         String res = "";
         
-        double total = 6299;
+        double minim = 130;
+        double maxim = 250;
+        double total = maxim - minim + 1.0;
         double lengthRange = total/numWorkers;
-        long min = (long)Math.floor(lengthRange*index);
-        long max = (long)Math.floor(lengthRange*index + lengthRange)-1;
+        long min = (long)Math.floor(lengthRange*index + minim);
+        long max = (long)Math.floor(lengthRange*index + minim + lengthRange)-1;
         res = res.concat("/"+ min +"/"+ max);
         
         return res;
@@ -32,7 +35,7 @@ public class RangeTest {
      * @param args
      */
     public static void main(String args[]){
-        
+        /*
         System.out.println("**********************");
         System.out.println("******* TEST 1 *******");
         System.out.println("**********************");
@@ -53,5 +56,15 @@ public class RangeTest {
         while(!rangeTest.isCompleted()){
             System.out.println(rangeTest.getNextRange());    
         }
+        */
+        System.out.println("**********************");
+        System.out.println("******* TEST 3 *******");
+        System.out.println("**********************");
+        
+        RangeCreator rangeTestFinal = new RangeCreatorDynamicLoad(6298, 4);
+        while(!rangeTestFinal.isCompleted()){
+            System.out.println(rangeTestFinal.getNextRange());    
+        }
+        
     }
 }

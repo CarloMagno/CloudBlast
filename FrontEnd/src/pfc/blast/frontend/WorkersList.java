@@ -10,8 +10,8 @@ public class WorkersList {
     
     private WorkersList() {
         workers = new LinkedList<String>();
-        workers.add("http://pfcblast-pfcblast.rhcloud.com/backend");
         workers.add("http://cloudblast-backend.herokuapp.com");
+        workers.add("http://pfcblast-pfcblast.rhcloud.com/backend");   
     }
     
     public static synchronized WorkersList getInstance(){
