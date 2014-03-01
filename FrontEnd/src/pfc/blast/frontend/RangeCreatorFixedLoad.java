@@ -30,13 +30,14 @@ public class RangeCreatorFixedLoad implements RangeCreator {
         double lengthRange = total/divisor;
         long min = (long)Math.floor(lengthRange*current);
         long max = (long)Math.floor(lengthRange*current + lengthRange)-1;
-        res = res.concat("/"+ min +"/"+ max);
         
-        if(max == maxRange){
+        if(max >= maxRange -1){
+            max = maxRange;
             completed = true;
         }else{
             current++;    
         }
+        res = res.concat("/"+ min +"/"+ max);
         
         return res;
     }

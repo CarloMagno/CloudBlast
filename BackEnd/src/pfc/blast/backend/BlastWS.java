@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +69,7 @@ public class BlastWS extends HttpServlet {
             JSONObject jsonResp = new JSONObject();
             JSONArray jsonNodeArray = new JSONArray();
             
+            /*
             //int cores = Runtime.getRuntime().availableProcessors();
             int cores = 1; // Para nube de Oracle.
             Set<Callable<JSONArray>> callables = new HashSet<Callable<JSONArray>>();
@@ -97,6 +99,45 @@ public class BlastWS extends HttpServlet {
             jsonResp.put("runningTime", t2-t1);
             out.println(jsonResp.toString());
             exec.shutdown();
+            out.close();
+            */
+            
+            // VERSION CON THREAD EN LUGAR DE RUNNABLE 
+            int cores = Runtime.getRuntime().availableProcessors();
+            //int cores = 1; // Para nube de Oracle.
+            List<JSONArray> results = Collections.synchronizedList(new LinkedList<JSONArray>());
+            List<BlastProcessorThread> threads = new LinkedList<BlastProcessorThread>();
+            RangeCreator rangeCreator = new RangeCreatorFixedLoad(initIndex, endIndex, cores);
+            for(int i = 0; i < cores; i++){
+                threads.add(new BlastProcessorThread(rangeCreator, 
+                                                     this.getServletContext(), 
+                                                     inputQuery, 
+                                                     new PrintStream(outStr), 
+                                                     results));
+            }
+            
+            long t1 = System.currentTimeMillis();
+            
+            // Lanzar threads.
+            for(int i = 0; i < cores; i++){
+                threads.get(i).start();
+            }
+            
+            for(int i = 0; i < cores; i++){
+                threads.get(i).join();
+            }
+            
+            // Recolectar datos.
+            for (JSONArray array: results) {
+                for(int i=0; i<array.length(); i++){
+                    jsonNodeArray.put(array.get(i));
+                }
+            }
+            
+            long t2 = System.currentTimeMillis();
+            jsonResp.put("data", jsonNodeArray);
+            jsonResp.put("runningTime", t2-t1);
+            out.println(jsonResp.toString());
             out.close();
             
         } catch (Exception e) {

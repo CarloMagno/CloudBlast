@@ -15,14 +15,6 @@ public class RangeCreatorFixedLoad implements RangeCreator {
         this.current = 0;
         this.completed = false;
     }
-    
-    public RangeCreatorFixedLoad(long maxRange, int divisor) {
-        this.minRange = 0;
-        this.maxRange = maxRange;
-        this.divisor = divisor;
-        this.current = 0;
-        this.completed = false;
-    }
 
     public synchronized boolean isCompleted() {
         return this.completed;
@@ -36,20 +28,19 @@ public class RangeCreatorFixedLoad implements RangeCreator {
     public synchronized String getNextRange() {
         String res = "";
         
-        double total = (double)maxRange - (double)minRange + 1;
+        double total = (double)maxRange;
         double lengthRange = total/divisor;
         long min = (long)Math.floor(lengthRange*current + minRange);
         long max = (long)Math.floor(lengthRange*current + minRange + lengthRange)-1;
-        res = res.concat("/"+ min +"/"+ max);
         
-        if(max == maxRange){
+        if(max >= maxRange -1){
+            max = maxRange;
             completed = true;
         }else{
             current++;    
         }
-        
+        res = res.concat("/"+ min +"/"+ max);
+
         return res;
     }
 }
-
-
