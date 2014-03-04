@@ -27,7 +27,7 @@ public class RangeTest {
         System.out.println("******* TEST 2 *******");
         System.out.println("**********************");
         
-        RangeCreator rangeTest2 = new RangeCreatorStaticLoad(6298,50);
+        RangeCreator rangeTest2 = new RangeCreatorStaticLoad(6298,10);
         while(!rangeTest2.isCompleted()){
             System.out.println(rangeTest2.getNextRange());    
         }

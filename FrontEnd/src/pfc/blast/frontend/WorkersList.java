@@ -11,6 +11,7 @@ public class WorkersList {
     private WorkersList() {
         workers = new LinkedList<String>();
         workers.add("http://cloudblast-backend.herokuapp.com");
+        workers.add("https://java-trialba2a.java.em1.oraclecloudapps.com");
         workers.add("http://pfcblast-pfcblast.rhcloud.com/backend");   
     }
     

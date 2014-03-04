@@ -132,10 +132,10 @@ public class ServletResult extends HttpServlet {
             
             if (parallelChoice.equals("seq")) {
                 rangeCreator = new RangeCreatorSequential(this.numProteins);
-            } else if (parallelChoice.equals("staticPar")) {
+            } else if (parallelChoice.equals("dynamParFix")) {
                 int blockSize = Integer.valueOf(request.getParameter("blockSize"));
                 rangeCreator = new RangeCreatorStaticLoad(this.numProteins, blockSize);    
-            } else if (parallelChoice.equals("dynamParFix")) {
+            } else if (parallelChoice.equals("staticPar")) {
                 rangeCreator = new RangeCreatorFixedLoad(this.numProteins, numWorkers);
             } else if (parallelChoice.equals("dynamParDyn")) {
                 rangeCreator = new RangeCreatorDynamicLoad(this.numProteins, numWorkers);
@@ -159,7 +159,7 @@ public class ServletResult extends HttpServlet {
             }
             
             long t2 = System.currentTimeMillis();
-            out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes </b>%n (%d max)</h2>", t2-t1, numWorkers, workers.size());
+            out.printf("<h2>Running Time: <b>%d msec</b> using <b>%d nodes </b>%n (%d max & %s)</h2>", t2-t1, numWorkers, workers.size(),parallelChoice);
             out.println("<br></br>");
             
             // Collecting data and print them.
