@@ -180,24 +180,7 @@ public class ServletResult extends HttpServlet {
         out.println("</body>");
         out.println("</html>");
     }
-        
-    private void processJSON(HttpServletRequest request,
-                         HttpServletResponse response) throws IOException {       
-        
-        response.setContentType(CONTENT_TYPE_JSON);
-        OutputStream outStr = response.getOutputStream();
-        PrintStream out = new PrintStream(outStr);
-
-        try {
-            String inputQuery = request.getParameter("sequence");
-            float percentage = (float)1.0;
-//            BlastRunnerSeq.executeJSON("p", this.getServletContext(), percentage, inputQuery, out);
-            out.close();
-        } catch( Exception e ){
-            out.println(e.getMessage());
-        }
-    }
-    
+            
     /**
      *
      * @param url

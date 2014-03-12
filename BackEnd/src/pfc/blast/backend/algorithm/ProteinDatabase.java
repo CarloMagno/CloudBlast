@@ -1,17 +1,11 @@
 package pfc.blast.backend.algorithm;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
 
 import javax.servlet.ServletContext;
 
@@ -22,36 +16,25 @@ public class ProteinDatabase {
     private long numProteins;
     private final static String PATH = "/db/";
     
+    // Estos constructores con este atributo es para probar el testeo del
+    // algoritmo en local.
     private String path2; // borrar
-    
-    // Exported constructors.
     public ProteinDatabase(File database, File index) {
 
     }
 
-    /**
-     * Construct a new protein sequence database.
-     *
-     * @param  theDatabaseFile  Protein sequence database file.
-     * @param  theIndexFile     Protein sequence index file.
-     *
-     * @exception  NullPointerException
-     *     (unchecked exception) Thrown if <TT>theDatabaseFile</TT> is null.
-     *     Thrown if <TT>theIndexFile</TT> is null.
-     * @exception  IOException
-     *     Thrown if an I/O error occurred.
-     */
     public ProteinDatabase(InputStream databaseStream, InputStream indexStream,
                            InputStream indexLengthStream) throws IOException {
 
     }
     
-    // borrar
     public ProteinDatabase(String path){
         context = null;
         this.path2 = path;
         this.numProteins = 6298;
     }
+    // Hasta aquí.
+    
     /**
      * Construct a new protein sequence database.
      *
@@ -68,8 +51,8 @@ public class ProteinDatabase {
         }
         this.context = context;
         
-        // Properties file con el numero de proteinas y la informacion necesaria
-        // para el computo.
+        // Properties file con el número de proteinas y la información necesaria
+        // para el cómputo.
         InputStream propertiesStream = context.getResourceAsStream(PATH + "data.properties");
         BufferedReader br = new BufferedReader(new InputStreamReader(propertiesStream));
         this.numProteins = Long.parseLong(br.readLine());
