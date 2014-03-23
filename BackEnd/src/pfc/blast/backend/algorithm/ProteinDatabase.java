@@ -87,12 +87,9 @@ public class ProteinDatabase {
         }
         String name = Long.toString(i).concat(".fasta");
         InputStream ins ;
-        // borrar
-        if(context == null){
-            ins = new FileInputStream(path2 + name);
-        }else{
-            ins = context.getResourceAsStream(PATH + name);
-        }
+
+        ins = context.getResourceAsStream(PATH + name);
+
         return new ProteinSequence(ins);
     }
 

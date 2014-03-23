@@ -29,7 +29,7 @@ public class SetWorkers extends HttpServlet {
     public void process(HttpServletRequest request,
                         HttpServletResponse response) throws ServletException,
                                                              IOException{  
-        WorkersList wl = WorkersList.getInstance();
+        WorkersList wl = WorkersList.getInstance(getServletContext());
         
         // Leer urls.
         String workersFile = request.getParameter("urls");

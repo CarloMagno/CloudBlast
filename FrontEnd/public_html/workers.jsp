@@ -51,7 +51,7 @@
               <p>
                 <h3>Workers already set</h3>
                 <%
-                    WorkersList wl = WorkersList.getInstance();
+                    WorkersList wl = WorkersList.getInstance(getServletConfig().getServletContext());
                     out.print("<br></br><h4>Number of nodes: "+wl.size()+"<br></br>");
                     for(int i = 0; i<wl.size(); i++){
                         out.print(wl.get(i));

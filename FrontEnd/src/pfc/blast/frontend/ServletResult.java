@@ -53,14 +53,16 @@ public class ServletResult extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        workers = WorkersList.getInstance();        
+        workers = WorkersList.getInstance(getServletContext());        
         InputStream propertiesStream = getServletContext().getResourceAsStream("/db/data.properties");
         BufferedReader br = new BufferedReader(new InputStreamReader(propertiesStream));
         try {
             this.numProteins = Long.parseLong(br.readLine());
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
     }
 
     public void doGet(HttpServletRequest request,

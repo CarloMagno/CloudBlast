@@ -42,7 +42,7 @@
                             &nbsp;
                             Workers
                             <% 
-                                WorkersList wl = WorkersList.getInstance();
+                                WorkersList wl = WorkersList.getInstance(getServletConfig().getServletContext());
                                 out.print("("+wl.size()+" max)");
                             %> 
                             <input type="text" name="numWorkers" size="5" value=<%=wl.size()%> />
